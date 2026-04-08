@@ -1,383 +1,716 @@
 <template>
-  <div class="jobs-page">
-    <!-- 顶部拓展栏 (Filter Section) -->
+  <div class="jobs">
+    <!-- 顶部拓展栏 -->
     <div class="top-section">
-      <div class="filter-wrapper container">
-        <div class="expectation-tabs">
-          <div class="expectation-tab" :class="{ active: selectedExpectation === '推荐' }" @click="selectedExpectation = '推荐'">推荐</div>
-          <div class="divider">|</div>
-          <div class="expectation-tab" :class="{ active: selectedExpectation === '前端开发' }" @click="selectedExpectation = '前端开发'">前端开发</div>
-          <div class="expectation-tab" :class="{ active: selectedExpectation === '后端开发' }" @click="selectedExpectation = '后端开发'">后端开发</div>
-          <div class="expectation-tab" :class="{ active: selectedExpectation === '产品经理' }" @click="selectedExpectation = '产品经理'">产品经理</div>
+      <!-- 期望选择区 -->
+      <div class="expectation-section">
+        <div class="container">
+          <div class="expectation-content">
+            <!-- 期望选择标签 -->
+            <div class="expectation-tabs">
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '推荐' }" @click="selectExpectation('推荐')">推荐</div>
+              <div class="divider">|</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '前端开发' }" @click="selectExpectation('前端开发')">前端开发</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '后端开发' }" @click="selectExpectation('后端开发')">后端开发</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '产品经理' }" @click="selectExpectation('产品经理')">产品经理</div>
+              <button class="add-expectation-btn">
+                <img src="../assets/icons/plus2.png" alt="plus" class="plus-icon">
+                添加期望
+              </button>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="search-section">
+              <SearchBox />
+            </div>
+          </div>
         </div>
       </div>
-      <div class="sub-filter-wrapper container">
-        <div class="filter-row">
-          <div class="filter-item" @click="toggleDropdown('city')">
-             {{ filters.city || '城市' }} 
-             <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="filter-item" @click="toggleDropdown('salary')">
-            {{ filters.salary || '薪资要求' }}
-            <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="filter-item" @click="toggleDropdown('experience')">
-            {{ filters.experience || '工作经验' }}
-            <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      
+      <!-- 筛选区 -->
+      <div class="filter-section">
+        <div class="container">
+          <div class="filter-tabs">
+            <!-- 求职类型 -->
+            <div class="filter-tab" @click="toggleFilter('jobType')" ref="jobTypeTab">
+              <span :class="{ 'highlighted': filters.jobType.value !== '任意' }">
+                {{ filters.jobType.title }}
+                <span v-if="filters.jobType.value !== '任意'">: {{ filters.jobType.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.jobType.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.jobType.isOpen">
+                <div class="filter-option" v-for="option in filters.jobType.options" :key="option" @click="selectFilterOption('jobType', option)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- 薪资待遇 -->
+            <div class="filter-tab" @click="toggleFilter('salary')">
+              <span :class="{ 'highlighted': filters.salary.value !== '任意' }">
+                {{ filters.salary.title }}
+                <span v-if="filters.salary.value !== '任意'">: {{ filters.salary.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.salary.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.salary.isOpen">
+                <div class="filter-option" v-for="option in filters.salary.options" :key="option" @click="selectFilterOption('salary', option)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- 工作经验 -->
+            <div class="filter-tab" @click="toggleFilter('experience')">
+              <span :class="{ 'highlighted': filters.experience.value !== '任意' }">
+                {{ filters.experience.title }}
+                <span v-if="filters.experience.value !== '任意'">: {{ filters.experience.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.experience.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.experience.isOpen">
+                <div class="filter-option" v-for="option in filters.experience.options" :key="option" @click="selectFilterOption('experience', option)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- 学历要求 -->
+            <div class="filter-tab" @click="toggleFilter('education')">
+              <span :class="{ 'highlighted': filters.education.value !== '任意' }">
+                {{ filters.education.title }}
+                <span v-if="filters.education.value !== '任意'">: {{ filters.education.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.education.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.education.isOpen">
+                <div class="filter-option" v-for="option in filters.education.options" :key="option" @click="selectFilterOption('education', option)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- 公司行业 -->
+            <div class="filter-tab" @click="toggleFilter('industry')">
+              <span :class="{ 'highlighted': filters.industry.value !== '任意' }">
+                {{ filters.industry.title }}
+                <span v-if="filters.industry.value !== '任意'">: {{ filters.industry.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.industry.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.industry.isOpen">
+                <div class="filter-option">暂不实现</div>
+              </div>
+            </div>
+            
+            <!-- 公司规模 -->
+            <div class="filter-tab" @click="toggleFilter('companySize')">
+              <span :class="{ 'highlighted': filters.companySize.value !== '任意' }">
+                {{ filters.companySize.title }}
+                <span v-if="filters.companySize.value !== '任意'">: {{ filters.companySize.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.companySize.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.companySize.isOpen">
+                <div class="filter-option" v-for="option in filters.companySize.options" :key="option" @click="selectFilterOption('companySize', option)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- 页面双栏主体 -->
+    <!-- 页面主体 -->
     <div class="container main-content">
-      <!-- 左侧：职位列表 -->
-      <div class="job-list-panel">
-        <div 
-          class="job-card" 
-          v-for="job in jobs" 
-          :key="job.id" 
-          :class="{ 'is-selected': selectedJob && selectedJob.id === job.id }"
-          @click="selectJob(job)"
-        >
-          <div class="card-header">
-            <h3 class="job-title">{{ job.title }}</h3>
-            <span class="job-salary">{{ job.salary }}</span>
-          </div>
-          <div class="job-tags">
-            <span class="tag" v-for="tag in job.tags" :key="tag">{{ tag }}</span>
-          </div>
-          <div class="company-row">
-            <!-- 简单的首字母头像 -->
-            <div class="company-avatar-sm">{{ job.company.charAt(0) }}</div>
-            <div class="company-name">{{ job.company }} <span class="industry-text">· 互联网</span></div>
-            <div class="job-location">{{ job.location }}</div>
+      <div class="content-wrapper">
+        <!-- 职位卡片区 -->
+        <div class="job-list">
+          <div class="job-card" v-for="job in jobs" :key="job.id" @click="selectJob(job)" :class="{ 'is-selected': selectedJob && selectedJob.id === job.id }">
+            <!-- 顶部标题区 -->
+            <div class="job-header">
+              <div class="job-title-container">
+                <h3 class="job-title">{{ job.title }}</h3>
+              </div>
+              <span class="job-salary">{{ job.salary }}</span>
+            </div>
+            
+            <!-- 中部tag区 -->
+            <div class="job-tags">
+              <span class="tag" v-for="tag in job.tags" :key="tag">{{ tag }}</span>
+              <span class="tag">{{ job.experience }}</span>
+              <span class="tag">{{ job.education }}</span>
+            </div>
+            
+            <!-- 底部企业名片 -->
+            <div class="company-card">
+              <div class="company-logo"></div>
+              <span class="company-name">{{ job.company }}</span>
+              <span class="job-location">{{ job.location }}</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- 右侧：职位详情 (粘性定位) -->
-      <div class="job-detail-panel">
-        <JobDetail v-if="selectedJob" :job="selectedJob" />
-        <div class="empty-state" v-else>
-          <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="var(--tea-green, #ccd5ae)" stroke-width="1.5">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-            <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path>
-          </svg>
-          <p>请点击左侧卡片查看职位详情</p>
+        
+        <!-- 职位详情区 -->
+        <div class="job-detail-section">
+          <JobDetail :job="selectedJob" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import JobDetail from '../components/JobDetail.vue';
+<script>
+import JobDetail from '../components/JobDetail.vue'
+import SearchBox from '../components/SearchBox.vue'
+import { jobs } from '../config/jobs.js'
 
-const selectedExpectation = ref('推荐');
-const filters = ref({ city: '', salary: '', experience: '' });
-const activeDropdown = ref(null);
-
-const toggleDropdown = (key) => {
-  activeDropdown.value = activeDropdown.value === key ? null : key;
-};
-
-// Mock 数据
-const jobs = ref([
-  {
-    id: 1,
-    title: '高级前端开发工程师',
-    company: '字节跳动',
-    salary: '25K-45K',
-    location: '北京',
-    tags: ['5-10年', '本科', 'Vue3', 'Node.js'],
-    description: [
-      '1. 负责公司核心业务系统的架构设计、开发及优化；',
-      '2. 参与前沿技术研究，包括微前端、Serverless、组件库建设等；',
-      '3. 与产品经理、UI设计师紧密合作，提升用户体验；',
-      '4. 指导并带领初中级工程师，提升团队整体技术能力。',
-      '任职要求：',
-      '1. 统招本科及以上学历，5年以上前端开发经验；',
-      '2. 精通 HTML5, CSS3, JavaScript/TypeScript；',
-      '3. 深入理解 Vue3 / React 设计原理，有 SSR 框架（如 Nuxt/Next）实战经验；',
-      '4. 具备大型复杂前端项目架构设计能力，注重代码质量与性能优化。'
-    ]
+export default {
+  name: 'Jobs',
+  components: {
+    JobDetail,
+    SearchBox
   },
-  {
-    id: 2,
-    title: 'Vue 前端开发工程师',
-    company: '美团',
-    salary: '18K-35K',
-    location: '上海',
-    tags: ['3-5年', '本科', 'Vue3', 'TypeScript'],
-    description: [
-      '1. 负责相关业务线后台管理系统和移动端 H5 页面开发；',
-      '2. 配合后端工程师一起研讨技术实现方案；',
-      '3. 跟进新技术发展，参与技术方案的评审及选型。',
-      '任职要求：',
-      '1. 计算机相关专业本科以上学历；',
-      '2. 扎实的前端基础，熟练使用 Vue3 技术栈；',
-      '3. 有独立负责一个中小型项目的能力。'
-    ]
+  data() {
+    return {
+      jobs: jobs,
+      selectedJob: null,
+      selectedExpectation: '推荐',
+      // 筛选器状态
+      filters: {
+        jobType: {
+          title: '求职类型',
+          value: '任意',
+          options: ['任意', '全职', '兼职', '实习'],
+          isOpen: false
+        },
+        salary: {
+          title: '薪资待遇',
+          value: '任意',
+          options: ['任意', '5K以下', '5K-10K', '10K-15K', '15K-20K', '20K-30K', '30K以上'],
+          isOpen: false
+        },
+        experience: {
+          title: '工作经验',
+          value: '任意',
+          options: ['任意', '在校', '应届生', '1年内', '1~3年', '3~5年', '5年+'],
+          isOpen: false
+        },
+        education: {
+          title: '学历要求',
+          value: '任意',
+          options: ['任意', '高中', '大专', '本科', '硕士', '博士'],
+          isOpen: false
+        },
+        industry: {
+          title: '公司行业',
+          value: '任意',
+          options: [],
+          isOpen: false
+        },
+        companySize: {
+          title: '公司规模',
+          value: '任意',
+          options: ['任意', '少于50人', '50-100人', '100-500人', '500-1000人', '1000人以上'],
+          isOpen: false
+        }
+      }
+    }
   },
-  {
-    id: 3,
-    title: '初级前端研发',
-    company: '滴滴出行',
-    salary: '12K-20K',
-    location: '北京',
-    tags: ['1-3年', '本科', 'JavaScript', 'CSS3'],
-    description: [
-      '岗位职责：',
-      '1. 负责基础页面的切图及交互逻辑实现；',
-      '2. 负责常规业务需求的日常迭代；',
-      '任职要求：',
-      '1. 熟悉HTML/CSS/JS等前端基础；',
-      '2. 有良好的学习能力及沟通能力。'
-    ]
+  mounted() {
+    // 默认选中第一个职位
+    if (this.jobs.length > 0) {
+      this.selectedJob = this.jobs[0]
+    }
   },
-  {
-    id: 4,
-    title: '资深前端架构师',
-    company: '阿里巴巴',
-    salary: '40K-70K',
-    location: '杭州',
-    tags: ['10年以上', '本科', '基建', 'Node.js', '跨端'],
-    description: [
-      '岗位职责：',
-      '1. 负责集团级前端基础设施建设，包括不仅限于构建工具、埋点监控、性能平台；',
-      '2. 主导跨部门协作及技术攻坚。'
-    ]
-  },
-  {
-    id: 5,
-    title: '前端技术专家',
-    company: '腾讯',
-    salary: '35K-60K',
-    location: '深圳',
-    tags: ['5-10年', '本科', '多端开发'],
-    description: [
-      '岗位职责：',
-      '1. 主导核心业务技术规划；',
-      '2. 解决疑难杂症，带头进行技术创新。'
-    ]
+  methods: {
+    selectJob(job) {
+      this.selectedJob = job
+    },
+    selectExpectation(expectation) {
+      this.selectedExpectation = expectation
+    },
+    // 切换筛选器状态
+    toggleFilter(filterKey) {
+      // 关闭所有其他筛选器
+      Object.keys(this.filters).forEach(key => {
+        if (key !== filterKey) {
+          this.filters[key].isOpen = false
+        }
+      })
+      // 切换当前筛选器
+      this.filters[filterKey].isOpen = !this.filters[filterKey].isOpen
+    },
+    // 选择筛选器选项
+    selectFilterOption(filterKey, option) {
+      this.filters[filterKey].value = option
+      this.filters[filterKey].isOpen = false
+    },
+    // 关闭所有筛选器
+    closeAllFilters() {
+      Object.keys(this.filters).forEach(key => {
+        this.filters[key].isOpen = false
+      })
+    }
   }
-]);
-
-const selectedJob = ref(null);
-
-const selectJob = (job) => {
-  selectedJob.value = job;
-};
-
-// 默认选中第一个
-if (jobs.value.length > 0) {
-  selectJob(jobs.value[0]);
 }
 </script>
 
 <style scoped>
-.jobs-page {
-  min-height: calc(100vh - 64px); /* 减去 navbar 的高度 */
-  background-color: #f7f9fa;
-  padding-bottom: 40px;
+.jobs {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--tea-green) 0%, var(--cornsilk) 100%);
+  background-attachment: fixed;
+  position: relative;
+  padding-top: 60px;
 }
 
-/* 顶部筛选区 */
-.top-section {
-  background-color: #fff;
-  border-bottom: 1px solid #eaeaea;
-  position: sticky;
-  top: 64px; /* 如果 Navbar 是 fixed, 那么这里相对于 Navbar 下方; 若不是则为 0 */
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+.jobs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23f0f0f0" stroke-width="0.5" opacity="0.3"/></svg>');
+  background-size: 50px 50px;
+  z-index: 0;
+  pointer-events: none;
 }
+
+/* 顶部拓展栏 */
+.top-section {
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  border-radius: 0 0 20px 20px;
+  margin-bottom: 30px;
+  overflow: visible;
+}
+
+/* 期望选择区 */
+.expectation-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, var(--cornsilk), rgba(254, 250, 224, 0.5));
+}
+
+/* 期望内容 */
+.expectation-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* 期望选择标签 */
+.expectation-tabs {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 搜索框 */
+.search-section {
+  flex: 1;
+  margin: 0;
+  max-width: 400px;
+}
+
+/* 筛选区 */
+.filter-section {
+  padding: 16px 0;
+  background-color: white;
+}
+
+/* 容器 */
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
+  position: relative;
+  z-index: 1;
 }
-.filter-wrapper {
-  padding: 16px 0;
-  border-bottom: 1px dashed #f0f0f0;
+
+/* 顶部拓展栏（一层） */
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
+
+.expectation-section {
+  flex: 1;
+}
+
+.search-section {
+  flex: 1;
+  margin: 0;
+}
+
 .expectation-tabs {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
 }
+
 .expectation-tab {
-  font-size: 15px;
-  color: #555;
+  padding: 5px 5px;
   cursor: pointer;
-  padding: 4px 0;
+  transition: all 0.3s;
   position: relative;
-  transition: color 0.2s;
+  font-size: 14px;
+  color: #666;
 }
+
 .expectation-tab:hover {
-  color: #333;
+  color: var(--light-bronze);
 }
+
 .expectation-tab.active {
-  font-weight: bold;
-  color: #333;
+  color: var(--light-bronze);
+  font-weight: 500;
 }
+
 .expectation-tab.active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
-  background-color: var(--tea-green, #ccd5ae);
-  border-radius: 2px;
-}
-.divider {
-  color: #e0e0e0;
-}
-.sub-filter-wrapper {
-  padding: 12px 0;
-}
-.filter-row {
-  display: flex;
-  gap: 24px;
-}
-.filter-item {
-  font-size: 14px;
-  color: #666;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.filter-item:hover {
-  color: var(--light-bronze, #d4a373);
-}
-.chevron {
-  transition: transform 0.2s;
+  bottom: 0;
+  left: 5px;
+  right: 5px;
+  height: 2px;
+  background-color: var(--light-bronze);
 }
 
-/* 主体双栏布局 */
-.main-content {
+.divider {
+  color: #666;
+}
+
+.add-expectation-btn {
   display: flex;
-  gap: 20px;
-  margin-top: 20px;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--light-bronze);
+  border-radius: 20px;
+  color: var(--light-bronze);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.add-expectation-btn:hover {
+  background-color: var(--light-bronze);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(192, 146, 99, 0.3);
+}
+
+.plus-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0.7);
+  transition: all 0.3s;
+  margin-top: 1px;
+}
+
+.add-expectation-btn:hover .plus-icon {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
+}
+
+/* 顶部拓展栏（二层） */
+.filter-bar {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 12px 0;
+  position: relative;
+  z-index: 5;
+  margin-bottom: 24px;
+}
+
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 4px;
+  font-size: 14px;
+  position: relative;
+}
+
+/* 当值为任意时，标题颜色稍暗 */
+.filter-tab span {
+  color: #666;
+}
+
+/* 当值不为任意时，标题高亮 */
+.filter-tab span.highlighted {
+  color: var(--light-bronze);
+}
+
+/* 当值不为任意时，值也高亮 */
+.filter-tab span.highlighted span {
+  color: var(--light-bronze);
+}
+
+.filter-tab:hover {
+  background-color: rgba(233, 237, 201, 0.5);
+}
+
+.filter-tab:hover .arrow-icon {
+  filter: brightness(1);
+}
+
+.arrow-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0.6);
+  transition: all 0.3s;
+}
+
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* 筛选器下拉列表 */
+.filter-tab {
+  position: relative;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 120px;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.filter-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-option:hover {
+  background-color: var(--beige);
+  color: var(--light-bronze);
+}
+
+/* 页面主体 */
+.main-content {
+  padding-bottom: 60px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 30px;
   align-items: flex-start;
 }
 
-/* 左侧职位列表 */
-.job-list-panel {
-  flex: 1;
+/* 职位卡片区 */
+.job-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  /* 中等宽度占比 */
-  max-width: 480px;
+  gap: 24px;
+  width: 320px;
 }
+
 .job-card {
-  background: #fff;
+  padding: 12px;
+  border: 1px solid #f0f0f0;
   border-radius: 12px;
-  padding: 20px;
+  transition: all 0.3s;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
+
 .job-card:hover {
-  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  border-color: var(--light-bronze);
 }
+
 .job-card.is-selected {
-  border-color: var(--tea-green, #ccd5ae);
-  background-color: var(--cornsilk, #fefae0);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--light-bronze);
+  transform: translateY(-6px);
 }
-.card-header {
+
+.job-card.is-selected .job-title {
+  color: var(--light-bronze);
+  font-weight: bold;
+}
+
+.job-card:hover .job-title {
+  color: var(--light-bronze);
+}
+
+.job-header {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.job-title-container {
+  display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 12px;
 }
+
 .job-title {
+  font-size: 20px;
+  line-height: 38px;
+  font-weight: bold;
   margin: 0;
-  font-size: 17px;
-  font-weight: 600;
-  color: #333;
-  line-height: 1.4;
+  transition: color 0.3s;
 }
+
 .job-salary {
+  color: var(--light-bronze);
+  font-weight: bold;
   font-size: 16px;
-  color: #ff6a00;
-  font-weight: 500;
+  background-color: rgba(192, 146, 99, 0.1);
+  padding: 3px 6px;
+  margin: 6px 0;
+  border-radius: 10px;
 }
+
 .job-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 16px;
-}
-.tag {
-  background: #f8f8f8;
-  color: #666;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 4px;
-}
-.company-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-top: 1px dashed #f0f0f0;
-  padding-top: 12px;
-}
-.company-avatar-sm {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  background-color: var(--beige, #e9edc9);
-  color: #555;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-.company-name {
-  font-size: 14px;
-  color: #333;
-  flex: 1;
-}
-.industry-text {
-  color: #999;
-  font-size: 12px;
-}
-.job-location {
-  font-size: 13px;
-  color: #888;
+  margin-bottom: 20px;
 }
 
-/* 右侧详情面板 */
-.job-detail-panel {
-  flex: 1.5; /* 占比更大 */
-  position: sticky;
-  top: 150px; /* 吸顶的位置，考虑到导航栏+筛选器的高度 */
-  height: calc(100vh - 170px);
+.tag {
+  padding: 4px 12px;
+  background-color: rgba(233, 237, 201, 0.7);
+  border-radius: 20px;
+  font-size: 13px;
+  color: #666;
+  transition: all 0.3s;
 }
-.empty-state {
-  height: 100%;
-  background: #fff;
-  border-radius: 12px;
+
+.company-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: rgba(254, 250, 224, 0.8);
+  border-radius: 10px;
+  transition: all 0.3s;
+  height: 50px;
+  border: 1px solid rgba(233, 237, 201, 0.5);
+}
+
+.company-card:hover {
+  background-color: rgba(254, 250, 224, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.company-card .company-name {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  font-weight: 500;
+  text-align: left;
+  line-height: 23px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.company-card:hover .company-name {
+  color: var(--light-bronze);
+}
+
+.company-logo {
+  width: 32px;
+  height: 32px;
+  background-color: var(--beige);
+  border-radius: 6px;
+  line-height: 32px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  font-weight: bold;
+  color: var(--light-bronze);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.empty-state svg {
-  margin-bottom: 16px;
+
+.company-name {
+  flex: 1;
+  font-size: 14px;
+  margin: 0;
+  text-align: left;
+  transition: color 0.3s;
+}
+
+.job-location {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  background-color: rgba(102, 102, 102, 0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* 职位详情区 */
+.job-detail-section {
+  flex: 1;
+  position: sticky;
+  top: 84px;
+  height: calc(100vh - 120px);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .job-detail-section {
+    width: 100%;
+    position: static;
+    height: auto;
+  }
+  
+  .filter-tabs {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .expectation-tabs {
+    flex-wrap: wrap;
+  }
 }
 </style>
