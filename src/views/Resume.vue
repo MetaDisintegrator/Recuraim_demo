@@ -88,7 +88,7 @@
             </div>
           </div>
 
-          <div class="advice-block highlight-block">
+          <div class="advice-block highlight-block" v-if="!isReAnalyzed">
             <h4 class="advice-title">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--light-bronze)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
               STAR 法则表达优化
@@ -103,14 +103,38 @@
                 <p>{{ aiAdvice.rewriteSuggestion.suggested }}</p>
               </div>
             </div>
-            <button 
-              class="btn-primary adopt-btn" 
-              @click="adoptSuggestion" 
-              :disabled="resumeData.workExps[0].isUpdated"
-            >
-              {{ resumeData.workExps[0].isUpdated ? '已采纳优化' : '一键采纳该建议' }}
-            </button>
+            
+            <div class="action-group">
+              <button 
+                class="btn-primary adopt-btn" 
+                @click="adoptSuggestion" 
+                :disabled="resumeData.workExps[0].isUpdated"
+              >
+                {{ resumeData.workExps[0].isUpdated ? '已采纳建议并同步至简历' : '一键采纳该建议' }}
+              </button>
+              
+              <button 
+                v-if="resumeData.workExps[0].isUpdated"
+                class="btn-outline reanalyze-btn" 
+                @click="reAnalyze"
+              >
+                触发重新分析
+              </button>
+            </div>
           </div>
+
+          <!-- 重新分析后无更多建议的占位卡片 -->
+          <div class="advice-block highlight-block" v-else>
+            <h4 class="advice-title" style="color: var(--light-bronze, #d4a373);">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              暂无更多优化建议
+            </h4>
+            <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">
+              您的简历已非常完善，结构清晰并充满数据支撑，核心竞争力显著提升。目前系统已无法找出更多需要改写的地方。<br/><br/>
+              您可以尝试直接将这份优质简历投递给心仪的岗位！
+            </p>
+          </div>
+
         </div>
       </div>
     </div>
@@ -124,6 +148,7 @@ const status = ref('idle'); // idle | analyzing | finished
 const isDragging = ref(false);
 const progress = ref(0);
 const currentStepText = ref('');
+const isReAnalyzed = ref(false);
 
 const analyzeSteps = [
   "正在读取文档与 OCR 识别...",
@@ -194,11 +219,43 @@ const adoptSuggestion = () => {
   resumeData.value.workExps[0].isUpdated = true;
 };
 
+const reAnalyze = () => {
+  status.value = 'analyzing';
+  progress.value = 0;
+  let stepIndex = 0;
+  
+  const timer = setInterval(() => {
+    progress.value += Math.random() * 20; // 稍微加快点速度
+    
+    if (progress.value >= (stepIndex + 1) * 16.6 && stepIndex < analyzeSteps.length) {
+      currentStepText.value = analyzeSteps[stepIndex];
+      stepIndex++;
+    }
+
+    if (progress.value >= 100) {
+      clearInterval(timer);
+      progress.value = 100;
+      setTimeout(() => {
+        status.value = 'finished';
+        isReAnalyzed.value = true;
+        // 模拟重新分析后的更好结果
+        aiAdvice.value.score = 92;
+        aiAdvice.value.evaluation = '表现卓越，超越 95% 的求职者';
+        aiAdvice.value.missingKeywords = [];
+      }, 400);
+    }
+  }, 200);
+};
+
 const resetUpload = () => {
   status.value = 'idle';
   progress.value = 0;
+  isReAnalyzed.value = false;
   resumeData.value.workExps[0].desc = aiAdvice.value.rewriteSuggestion.original;
   resumeData.value.workExps[0].isUpdated = false;
+  aiAdvice.value.score = 78;
+  aiAdvice.value.evaluation = '良好，超越 65% 的求职者';
+  aiAdvice.value.missingKeywords = ['微前端', '性能优化', 'Vite', 'CI/CD'];
 };
 </script>
 
@@ -536,6 +593,19 @@ const resetUpload = () => {
   border-left: 3px solid var(--light-bronze, #d4a373);
   line-height: 1.5;
 }
+
+.action-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+.btn-outline.reanalyze-btn {
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+}
+
 .btn-primary.adopt-btn {
   width: 100%;
   background-color: var(--tea-green, #ccd5ae);
