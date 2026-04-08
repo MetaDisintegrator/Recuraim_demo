@@ -16,14 +16,23 @@
 
     <!-- 导航栏 -->
     <div class="navbar-nav">
-      <router-link to="/" class="nav-item" active-class="active">首页</router-link>
-      <router-link to="/jobs" class="nav-item" active-class="active">职位</router-link>
-      <router-link to="/companies" class="nav-item" active-class="active">公司</router-link>
-      <router-link to="/discussions" class="nav-item" active-class="active">讨论</router-link>
-      <div class="nav-right">
-        <router-link to="/messages" class="nav-item" active-class="active">消息</router-link>
-        <router-link to="/resume" class="nav-item" active-class="active">简历</router-link>
-      </div>
+      <template v-if="!isRecruiter">
+        <router-link to="/" class="nav-item" active-class="active">首页</router-link>
+        <router-link to="/jobs" class="nav-item" active-class="active">职位</router-link>
+        <router-link to="/companies" class="nav-item" active-class="active">公司</router-link>
+        <router-link to="/discussions" class="nav-item" active-class="active">讨论</router-link>
+        <div class="nav-right">
+          <router-link to="/messages" class="nav-item" active-class="active">消息</router-link>
+          <router-link to="/resume" class="nav-item" active-class="active">简历</router-link>
+        </div>
+      </template>
+      <template v-else>
+        <router-link to="/recruiter/jobs" class="nav-item" active-class="active">职位管理</router-link>
+        <router-link to="/recruiter/candidates" class="nav-item" active-class="active">候选人</router-link>
+        <div class="nav-right">
+          <router-link to="/messages" class="nav-item" active-class="active">消息</router-link>
+        </div>
+      </template>
     </div>
 
     <!-- 个人信息 -->
@@ -32,8 +41,9 @@
       <div class="user-avatar"></div>
       <!-- 个人菜单 -->
       <div class="user-menu" v-if="showUserMenu" @mouseenter="onUserMenuHover" @mouseleave="hideUserMenu">
-        <a href="#" class="menu-item">完善信息</a>
-        <a href="#" class="menu-item">切换为招聘者</a>
+        <a href="#" class="menu-item" v-if="!isRecruiter">完善信息</a>
+        <a href="#" class="menu-item" v-else>企业信息</a>
+        <a href="#" class="menu-item" @click.prevent="toggleRole">{{ isRecruiter ? '切换为求职者' : '切换为招聘者' }}</a>
         <a href="/login" class="menu-item">退出登录</a>
       </div>
     </div>
@@ -62,7 +72,8 @@ export default {
       showLocationModal: false,
       showUserMenu: false,
       isLocationHovered: false,
-      userMenuCloseTimer: null
+      userMenuCloseTimer: null,
+      isRecruiter: localStorage.getItem('userRole') === 'recruiter'
     }
   },
   computed: {
@@ -82,29 +93,36 @@ export default {
       this.isLocationHovered = false;
     },
     hideUserMenu() {
-      // 清除之前的定时器
       if (this.userMenuCloseTimer) {
         clearTimeout(this.userMenuCloseTimer);
       }
-      // 添加延迟，让用户有时间移动鼠标到菜单
       this.userMenuCloseTimer = setTimeout(() => {
         this.showUserMenu = false;
       }, 200);
     },
     clearUserMenuCloseTimer() {
-      // 清除关闭定时器
       if (this.userMenuCloseTimer) {
         clearTimeout(this.userMenuCloseTimer);
         this.userMenuCloseTimer = null;
       }
     },
     onUserInfoHover() {
-      this.showUserMenu = true;
       this.clearUserMenuCloseTimer();
+      this.showUserMenu = true;
     },
     onUserMenuHover() {
-      this.showUserMenu = true;
       this.clearUserMenuCloseTimer();
+      this.showUserMenu = true;
+    },
+    toggleRole() {
+      this.isRecruiter = !this.isRecruiter;
+      localStorage.setItem('userRole', this.isRecruiter ? 'recruiter' : 'jobseeker');
+      if (this.isRecruiter) {
+        this.$router.push('/recruiter/jobs');
+      } else {
+        this.$router.push('/');
+      }
+      this.showUserMenu = false;
     }
   }
 }
