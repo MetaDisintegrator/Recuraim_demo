@@ -292,6 +292,7 @@ const startAnalysis = () => {
   background-color: rgba(233, 237, 201, 0.7);
   transition: all 0.3s;
   border: 1px solid rgba(233, 237, 201, 0.5);
+  min-width: 40px;
 }
 
 .tag-icon {

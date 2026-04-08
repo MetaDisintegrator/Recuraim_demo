@@ -385,8 +385,9 @@ h2::after {
   font-weight: bold;
   font-size: 18px;
   background-color: rgba(192, 146, 99, 0.1);
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 3px 6px;
+  border-radius: 10px;
+  margin: 6px 0;
 }
 
 .job-tags {
@@ -397,12 +398,15 @@ h2::after {
 }
 
 .tag {
-  padding: 4px 12px;
+  padding: 2px 6px;
   background-color: rgba(233, 237, 201, 0.7);
-  border-radius: 20px;
+  border-radius: 10px;
   font-size: 13px;
   color: #666;
   transition: all 0.3s;
+  margin: 6px 0;
+  min-width: 40px;
+  text-align: center;
 }
 
 .company-card {
@@ -626,8 +630,9 @@ h2::after {
   font-weight: bold;
   font-size: 16px;
   background-color: rgba(192, 146, 99, 0.1);
-  padding: 4px 10px;
-  border-radius: 15px;
+  padding: 2px 5px;
+  border-radius: 7.5px;
+  margin: 6px 0;
 }
 
 .job-item-tags {
@@ -638,7 +643,9 @@ h2::after {
 
 .job-item-tags .tag {
   font-size: 12px;
-  padding: 3px 10px;
+  padding: 1.5px 5px;
+  border-radius: 7.5px;
+  margin: 6px 0;
 }
 
 .company-more {

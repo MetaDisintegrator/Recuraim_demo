@@ -610,12 +610,15 @@ export default {
 }
 
 .tag {
-  padding: 4px 12px;
+  padding: 2px 6px;
   background-color: rgba(233, 237, 201, 0.7);
-  border-radius: 20px;
+  border-radius: 10px;
   font-size: 13px;
   color: #666;
   transition: all 0.3s;
+  margin: 6px 0;
+  min-width: 40px;
+  text-align: center;
 }
 
 .company-card {
