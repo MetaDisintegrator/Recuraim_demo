@@ -39,33 +39,28 @@
     </div>
 
     <!-- 地区选择模态框 -->
-    <div class="modal" v-if="showLocationModal" @click="showLocationModal = false">
-      <div class="modal-content" @click.stop>
-        <h3>选择地区</h3>
-        <div class="search-box">
-          <input type="text" placeholder="搜索地区" v-model="locationSearch" />
-        </div>
-        <div class="location-list">
-          <div class="location-item" v-for="location in locations" :key="location" @click="selectLocation(location)">
-            {{ location }}
-          </div>
-        </div>
-        <button class="close-btn" @click="showLocationModal = false">关闭</button>
-      </div>
-    </div>
+    <LocationModal 
+      :visible="showLocationModal" 
+      :current-location="currentLocation"
+      @select="selectLocation"
+      @close="showLocationModal = false"
+    />
   </nav>
 </template>
 
 <script>
+import LocationModal from './LocationModal.vue'
+
 export default {
   name: 'Navbar',
+  components: {
+    LocationModal
+  },
   data() {
     return {
       currentLocation: '北京',
       showLocationModal: false,
       showUserMenu: false,
-      locationSearch: '',
-      locations: ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '天津'],
       isLocationHovered: false,
       userMenuCloseTimer: null
     }
@@ -296,74 +291,5 @@ export default {
   color: var(--light-bronze);
 }
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
 
-.modal-content {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 400px;
-  max-width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.modal-content h3 {
-  margin-bottom: 15px;
-  color: var(--light-bronze);
-}
-
-.search-box {
-  margin-bottom: 15px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.location-list {
-  margin-bottom: 15px;
-}
-
-.location-item {
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.3s;
-}
-
-.location-item:hover {
-  background-color: var(--beige);
-}
-
-.close-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--light-bronze);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-.close-btn:hover {
-  background-color: #c09263;
-}
 </style>
