@@ -1,118 +1,121 @@
 <template>
   <div class="jobs">
-    <!-- 顶部拓展栏（一层） -->
-    <div class="top-bar">
-      <div class="container">
-        <!-- 期望选择区 -->
-        <div class="expectation-section">
-          <div class="expectation-tabs">
-            <div class="expectation-tab" :class="{ active: selectedExpectation === '推荐' }" @click="selectExpectation('推荐')">推荐</div>
-            <div class="divider">|</div>
-            <div class="expectation-tab" :class="{ active: selectedExpectation === '前端开发' }" @click="selectExpectation('前端开发')">前端开发</div>
-            <div class="expectation-tab" :class="{ active: selectedExpectation === '后端开发' }" @click="selectExpectation('后端开发')">后端开发</div>
-            <div class="expectation-tab" :class="{ active: selectedExpectation === '产品经理' }" @click="selectExpectation('产品经理')">产品经理</div>
-            <button class="add-expectation-btn">
-              <img src="../assets/icons/plus2.png" alt="plus" class="plus-icon">
-              添加期望
-            </button>
+    <!-- 顶部拓展栏 -->
+    <div class="top-section">
+      <!-- 期望选择区 -->
+      <div class="expectation-section">
+        <div class="container">
+          <div class="expectation-content">
+            <!-- 期望选择标签 -->
+            <div class="expectation-tabs">
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '推荐' }" @click="selectExpectation('推荐')">推荐</div>
+              <div class="divider">|</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '前端开发' }" @click="selectExpectation('前端开发')">前端开发</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '后端开发' }" @click="selectExpectation('后端开发')">后端开发</div>
+              <div class="expectation-tab" :class="{ active: selectedExpectation === '产品经理' }" @click="selectExpectation('产品经理')">产品经理</div>
+              <button class="add-expectation-btn">
+                <img src="../assets/icons/plus2.png" alt="plus" class="plus-icon">
+                添加期望
+              </button>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="search-section">
+              <SearchBox />
+            </div>
           </div>
-        </div>
-        
-        <!-- 搜索框 -->
-        <div class="search-section">
-          <SearchBox />
         </div>
       </div>
-    </div>
-    
-    <!-- 顶部拓展栏（二层） -->
-    <div class="filter-bar">
-      <div class="container">
-        <div class="filter-tabs">
-          <!-- 求职类型 -->
-          <div class="filter-tab" @click="toggleFilter('jobType')" ref="jobTypeTab">
-            <span :class="{ 'highlighted': filters.jobType.value !== '任意' }">
-              {{ filters.jobType.title }}
-              <span v-if="filters.jobType.value !== '任意'">: {{ filters.jobType.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.jobType.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.jobType.isOpen">
-              <div class="filter-option" v-for="option in filters.jobType.options" :key="option" @click="selectFilterOption('jobType', option)">
-                {{ option }}
+      
+      <!-- 筛选区 -->
+      <div class="filter-section">
+        <div class="container">
+          <div class="filter-tabs">
+            <!-- 求职类型 -->
+            <div class="filter-tab" @click="toggleFilter('jobType')" ref="jobTypeTab">
+              <span :class="{ 'highlighted': filters.jobType.value !== '任意' }">
+                {{ filters.jobType.title }}
+                <span v-if="filters.jobType.value !== '任意'">: {{ filters.jobType.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.jobType.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.jobType.isOpen">
+                <div class="filter-option" v-for="option in filters.jobType.options" :key="option" @click="selectFilterOption('jobType', option)">
+                  {{ option }}
+                </div>
               </div>
             </div>
-          </div>
-          
-          <!-- 薪资待遇 -->
-          <div class="filter-tab" @click="toggleFilter('salary')">
-            <span :class="{ 'highlighted': filters.salary.value !== '任意' }">
-              {{ filters.salary.title }}
-              <span v-if="filters.salary.value !== '任意'">: {{ filters.salary.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.salary.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.salary.isOpen">
-              <div class="filter-option" v-for="option in filters.salary.options" :key="option" @click="selectFilterOption('salary', option)">
-                {{ option }}
+            
+            <!-- 薪资待遇 -->
+            <div class="filter-tab" @click="toggleFilter('salary')">
+              <span :class="{ 'highlighted': filters.salary.value !== '任意' }">
+                {{ filters.salary.title }}
+                <span v-if="filters.salary.value !== '任意'">: {{ filters.salary.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.salary.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.salary.isOpen">
+                <div class="filter-option" v-for="option in filters.salary.options" :key="option" @click="selectFilterOption('salary', option)">
+                  {{ option }}
+                </div>
               </div>
             </div>
-          </div>
-          
-          <!-- 工作经验 -->
-          <div class="filter-tab" @click="toggleFilter('experience')">
-            <span :class="{ 'highlighted': filters.experience.value !== '任意' }">
-              {{ filters.experience.title }}
-              <span v-if="filters.experience.value !== '任意'">: {{ filters.experience.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.experience.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.experience.isOpen">
-              <div class="filter-option" v-for="option in filters.experience.options" :key="option" @click="selectFilterOption('experience', option)">
-                {{ option }}
+            
+            <!-- 工作经验 -->
+            <div class="filter-tab" @click="toggleFilter('experience')">
+              <span :class="{ 'highlighted': filters.experience.value !== '任意' }">
+                {{ filters.experience.title }}
+                <span v-if="filters.experience.value !== '任意'">: {{ filters.experience.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.experience.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.experience.isOpen">
+                <div class="filter-option" v-for="option in filters.experience.options" :key="option" @click="selectFilterOption('experience', option)">
+                  {{ option }}
+                </div>
               </div>
             </div>
-          </div>
-          
-          <!-- 学历要求 -->
-          <div class="filter-tab" @click="toggleFilter('education')">
-            <span :class="{ 'highlighted': filters.education.value !== '任意' }">
-              {{ filters.education.title }}
-              <span v-if="filters.education.value !== '任意'">: {{ filters.education.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.education.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.education.isOpen">
-              <div class="filter-option" v-for="option in filters.education.options" :key="option" @click="selectFilterOption('education', option)">
-                {{ option }}
+            
+            <!-- 学历要求 -->
+            <div class="filter-tab" @click="toggleFilter('education')">
+              <span :class="{ 'highlighted': filters.education.value !== '任意' }">
+                {{ filters.education.title }}
+                <span v-if="filters.education.value !== '任意'">: {{ filters.education.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.education.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.education.isOpen">
+                <div class="filter-option" v-for="option in filters.education.options" :key="option" @click="selectFilterOption('education', option)">
+                  {{ option }}
+                </div>
               </div>
             </div>
-          </div>
-          
-          <!-- 公司行业 -->
-          <div class="filter-tab" @click="toggleFilter('industry')">
-            <span :class="{ 'highlighted': filters.industry.value !== '任意' }">
-              {{ filters.industry.title }}
-              <span v-if="filters.industry.value !== '任意'">: {{ filters.industry.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.industry.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.industry.isOpen">
-              <div class="filter-option">暂不实现</div>
+            
+            <!-- 公司行业 -->
+            <div class="filter-tab" @click="toggleFilter('industry')">
+              <span :class="{ 'highlighted': filters.industry.value !== '任意' }">
+                {{ filters.industry.title }}
+                <span v-if="filters.industry.value !== '任意'">: {{ filters.industry.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.industry.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.industry.isOpen">
+                <div class="filter-option">暂不实现</div>
+              </div>
             </div>
-          </div>
-          
-          <!-- 公司规模 -->
-          <div class="filter-tab" @click="toggleFilter('companySize')">
-            <span :class="{ 'highlighted': filters.companySize.value !== '任意' }">
-              {{ filters.companySize.title }}
-              <span v-if="filters.companySize.value !== '任意'">: {{ filters.companySize.value }}</span>
-            </span>
-            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.companySize.isOpen }">
-            <!-- 下拉列表 -->
-            <div class="filter-dropdown" v-if="filters.companySize.isOpen">
-              <div class="filter-option" v-for="option in filters.companySize.options" :key="option" @click="selectFilterOption('companySize', option)">
-                {{ option }}
+            
+            <!-- 公司规模 -->
+            <div class="filter-tab" @click="toggleFilter('companySize')">
+              <span :class="{ 'highlighted': filters.companySize.value !== '任意' }">
+                {{ filters.companySize.title }}
+                <span v-if="filters.companySize.value !== '任意'">: {{ filters.companySize.value }}</span>
+              </span>
+              <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.companySize.isOpen }">
+              <!-- 下拉列表 -->
+              <div class="filter-dropdown" v-if="filters.companySize.isOpen">
+                <div class="filter-option" v-for="option in filters.companySize.options" :key="option" @click="selectFilterOption('companySize', option)">
+                  {{ option }}
+                </div>
               </div>
             </div>
           </div>
@@ -317,13 +320,419 @@ export default {
   pointer-events: none;
 }
 
+/* 顶部拓展栏 */
+.top-section {
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  border-radius: 0 0 20px 20px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+/* 期望选择区 */
+.expectation-section {
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, var(--cornsilk), rgba(254, 250, 224, 0.5));
+}
+
+/* 期望内容 */
+.expectation-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* 期望选择标签 */
+.expectation-tabs {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 搜索框 */
+.search-section {
+  flex: 1;
+  margin: 0;
+  max-width: 400px;
+}
+
+/* 筛选区 */
+.filter-section {
+  padding: 16px 0;
+  background-color: white;
+}
+
+/* 页面主体 */
+.main-content {
+  padding-bottom: 60px;
+  max-width: 100%;
+}
+
+/* 内容包装器 */
+.content-wrapper {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* 职位卡片区 */
+.job-list {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.job-card {
+  padding: 24px;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  transition: all 0.3s;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.job-card:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  border-color: var(--light-bronze);
+}
+
+.job-card:hover .job-title {
+  color: var(--light-bronze);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.job-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.job-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  transition: color 0.3s;
+  line-height: 1.4;
+}
+
+.job-salary {
+  color: var(--light-bronze);
+  font-weight: bold;
+  font-size: 18px;
+  background-color: rgba(192, 146, 99, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.job-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  padding: 4px 12px;
+  background-color: rgba(233, 237, 201, 0.7);
+  border-radius: 20px;
+  font-size: 13px;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.company-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: rgba(254, 250, 224, 0.8);
+  border-radius: 10px;
+  transition: all 0.3s;
+  height: 50px;
+  border: 1px solid rgba(233, 237, 201, 0.5);
+}
+
+.company-card:hover {
+  background-color: rgba(254, 250, 224, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.company-card .company-name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  font-weight: 500;
+  text-align: left;
+  line-height: 23px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.company-card:hover .company-name {
+  color: var(--light-bronze);
+}
+
+.company-logo {
+  width: 32px;
+  height: 32px;
+  background-color: var(--beige);
+  border-radius: 6px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--light-bronze);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.company-name {
+  flex: 1;
+  font-size: 14px;
+  margin: 0;
+  text-align: left;
+  transition: color 0.3s;
+}
+
+.job-location {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  background-color: rgba(102, 102, 102, 0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* 职位详情区 */
+.job-detail-section {
+  width: 500px;
+  position: sticky;
+  top: 100px;
+  height: calc(100vh - 140px);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .job-detail-section {
+    width: 100%;
+    position: static;
+    height: auto;
+  }
+  
+  .filter-tabs {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .expectation-tabs {
+    flex-wrap: wrap;
+  }
+}
+
 /* 容器 */
 .container {
-  max-width: 1300px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
   z-index: 1;
+}
+
+/* 顶部拓展栏（一层） */
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.expectation-section {
+  flex: 1;
+}
+
+.search-section {
+  flex: 1;
+  margin: 0;
+}
+
+.expectation-tabs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.expectation-tab {
+  padding: 5px 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  font-size: 14px;
+  color: #666;
+}
+
+.expectation-tab:hover {
+  color: var(--light-bronze);
+}
+
+.expectation-tab.active {
+  color: var(--light-bronze);
+  font-weight: 500;
+}
+
+.expectation-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  right: 5px;
+  height: 2px;
+  background-color: var(--light-bronze);
+}
+
+.divider {
+  color: #666;
+}
+
+.add-expectation-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--light-bronze);
+  border-radius: 20px;
+  color: var(--light-bronze);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.add-expectation-btn:hover {
+  background-color: var(--light-bronze);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(192, 146, 99, 0.3);
+}
+
+.plus-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0.7);
+  transition: all 0.3s;
+  margin-top: 1px;
+}
+
+.add-expectation-btn:hover .plus-icon {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
+}
+
+/* 顶部拓展栏（二层） */
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 4px;
+  font-size: 14px;
+  position: relative;
+}
+
+/* 当值为任意时，标题颜色稍暗 */
+.filter-tab span {
+  color: #666;
+}
+
+/* 当值不为任意时，标题高亮 */
+.filter-tab span.highlighted {
+  color: var(--light-bronze);
+}
+
+/* 当值不为任意时，值也高亮 */
+.filter-tab span.highlighted span {
+  color: var(--light-bronze);
+}
+
+.filter-tab:hover {
+  background-color: rgba(233, 237, 201, 0.5);
+}
+
+.filter-tab:hover .arrow-icon {
+  filter: brightness(1);
+}
+
+.arrow-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0.6);
+  transition: all 0.3s;
+}
+
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* 筛选器下拉列表 */
+.filter-tab {
+  position: relative;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 120px;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.filter-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.filter-option:hover {
+  background-color: var(--beige);
+  color: var(--light-bronze);
 }
 
 /* 页面主体 */

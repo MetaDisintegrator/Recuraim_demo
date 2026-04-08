@@ -87,12 +87,18 @@ export default {
 <style scoped>
 .job-detail {
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s;
+}
+
+.job-detail:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .job-detail-header {
@@ -105,6 +111,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-radius: 16px 16px 0 0;
 }
 
 .job-secondary-section {
@@ -123,10 +130,13 @@ export default {
 }
 
 .job-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   margin: 0;
   color: #333;
+  transition: color 0.3s;
+  line-height: 1.4;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .job-salary {
@@ -134,8 +144,9 @@ export default {
   font-weight: bold;
   font-size: 18px;
   background-color: rgba(192, 146, 99, 0.1);
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(192, 146, 99, 0.2);
 }
 
 .job-tags-important {
@@ -148,11 +159,19 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 25px;
   font-size: 14px;
   color: #666;
   background-color: rgba(233, 237, 201, 0.7);
+  transition: all 0.3s;
+  border: 1px solid rgba(233, 237, 201, 0.5);
+}
+
+.tag-important:hover {
+  background-color: rgba(233, 237, 201, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .tag-icon {
@@ -177,18 +196,22 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 12px 20px;
   background-color: transparent;
-  border: 1px solid var(--light-bronze);
-  border-radius: 20px;
+  border: 2px solid var(--light-bronze);
+  border-radius: 25px;
   color: var(--light-bronze);
   cursor: pointer;
   transition: all 0.3s;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .favourite-btn:hover {
   background-color: var(--light-bronze);
   color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(192, 146, 99, 0.3);
 }
 
 .favourite-icon {
@@ -203,19 +226,21 @@ export default {
 }
 
 .contact-btn {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: var(--light-bronze);
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s;
   font-weight: 500;
+  box-shadow: 0 4px 15px rgba(192, 146, 99, 0.3);
 }
 
 .contact-btn:hover {
   background-color: #c09263;
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(192, 146, 99, 0.4);
 }
 
 .job-detail-content {
@@ -231,34 +256,58 @@ export default {
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   margin: 0 0 16px;
-  color: #333;
+  color: var(--light-bronze);
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--light-bronze), rgba(192, 146, 99, 0.5));
+  border-radius: 2px;
 }
 
 .job-description {
   margin-bottom: 24px;
   line-height: 1.6;
   color: #666;
+  padding: 20px;
+  background-color: rgba(254, 250, 224, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(233, 237, 201, 0.5);
 }
 
 .job-description p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .publisher-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background-color: rgba(254, 250, 224, 0.8);
-  border-radius: 10px;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--cornsilk), rgba(254, 250, 224, 0.8));
+  border-radius: 12px;
+  transition: all 0.3s;
+  border: 1px solid rgba(233, 237, 201, 0.5);
+}
+
+.publisher-info:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .publisher-avatar {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background-color: var(--tea-green);
   display: flex;
@@ -266,26 +315,35 @@ export default {
   justify-content: center;
   font-weight: bold;
   color: var(--light-bronze);
-  font-size: 18px;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
 }
 
 .publisher-details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .publisher-name {
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.publisher-info:hover .publisher-name {
+  color: var(--light-bronze);
 }
 
 .publisher-status {
-  font-size: 12px;
+  font-size: 13px;
   color: #4CAF50;
   background-color: rgba(76, 175, 80, 0.1);
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 4px 12px;
+  border-radius: 15px;
   align-self: flex-start;
+  font-weight: 500;
 }
 </style>
