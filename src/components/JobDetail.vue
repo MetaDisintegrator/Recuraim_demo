@@ -2,45 +2,36 @@
   <div class="job-detail">
     <!-- 头部信息 -->
     <div class="job-detail-header">
-      <div class="job-info">
-        <div class="job-title-section">
-          <h3 class="job-title">前端开发工程师</h3>
-          <span class="job-salary">15K-25K</span>
-        </div>
+      <!-- 第一行：职位名称和薪资 -->
+      <div class="job-title-section">
+        <h3 class="job-title">前端开发工程师</h3>
+        <span class="job-salary">15K-25K</span>
+      </div>
+      
+      <!-- 第二行：tag和action -->
+      <div class="job-secondary-section">
         <div class="job-tags-important">
           <span class="tag-important">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tag-icon">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
+            <img src="../assets/icons/location2.png" alt="location" class="tag-icon">
             北京
           </span>
           <span class="tag-important">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tag-icon">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
+            <img src="../assets/icons/exp.png" alt="experience" class="tag-icon">
             3-5年
           </span>
           <span class="tag-important">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tag-icon">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-            </svg>
+            <img src="../assets/icons/knowledge.png" alt="education" class="tag-icon">
             本科
           </span>
         </div>
-      </div>
-      <div class="job-actions">
-        <button class="favourite-btn" @click="toggleFavourite">
-          <svg v-if="!isFavourited" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="favourite-icon">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" class="favourite-icon">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-          <span>{{ isFavourited ? '已收藏' : '收藏' }}</span>
-        </button>
-        <button class="contact-btn">立刻沟通</button>
+        <div class="job-actions">
+          <button class="favourite-btn" @click="toggleFavourite">
+            <img v-if="!isFavourited" src="../assets/icons/favourite.png" alt="favourite" class="favourite-icon">
+            <img v-else src="../assets/icons/favourited.png" alt="favourite" class="favourite-icon">
+            <span>{{ isFavourited ? '已收藏' : '收藏' }}</span>
+          </button>
+          <button class="contact-btn">立刻沟通</button>
+        </div>
       </div>
     </div>
     
@@ -53,6 +44,16 @@
         <p>3. 与后端开发人员协作，实现前后端数据交互。</p>
         <p>4. 持续学习新技术，提升团队技术水平。</p>
         <p>5. 参与代码评审，确保代码质量。</p>
+        <p>6. 负责前端性能优化，提高页面加载速度和响应速度。</p>
+        <p>7. 编写前端技术文档，规范前端开发流程。</p>
+        <p>8. 与设计师协作，实现UI/UX设计方案。</p>
+        <p>9. 解决前端开发过程中的技术难题。</p>
+        <p>10. 指导初级前端开发人员，提升团队整体技术水平。</p>
+        <p>11. 参与前端技术选型和架构设计。</p>
+        <p>12. 关注前端技术发展趋势，引入新技术提升产品竞争力。</p>
+        <p>13. 负责前端代码的单元测试和集成测试。</p>
+        <p>14. 优化前端构建流程，提高开发效率。</p>
+        <p>15. 与产品经理沟通，理解产品需求并转化为技术实现。</p>
       </div>
       
       <h4 class="section-title">发布人信息</h4>
@@ -101,10 +102,17 @@ export default {
   position: sticky;
   top: 0;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.job-info {
-  margin-bottom: 16px;
+.job-secondary-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .job-title-section {
@@ -150,6 +158,13 @@ export default {
 .tag-icon {
   width: 16px;
   height: 16px;
+  filter: brightness(0.6);
+  transition: all 0.3s;
+}
+
+.tag-important:hover .tag-icon {
+  filter: brightness(1);
+  transform: scale(1.1);
 }
 
 .job-actions {
@@ -179,6 +194,12 @@ export default {
 .favourite-icon {
   width: 16px;
   height: 16px;
+  transition: all 0.3s;
+}
+
+.favourite-btn:hover .favourite-icon {
+  transform: scale(1.1);
+  filter: brightness(0) invert(1);
 }
 
 .contact-btn {
@@ -201,6 +222,12 @@ export default {
   padding: 24px;
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.job-detail-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .section-title {

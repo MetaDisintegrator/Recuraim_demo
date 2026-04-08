@@ -20,9 +20,7 @@
               <div class="job-title-container">
                 <h3 class="job-title">{{ job.title }}</h3>
                 <a href="#" class="talk-link">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                  </svg>
+                  <img src="../assets/icons/talk.png" alt="talk" class="talk-icon">
                 </a>
               </div>
               <span class="job-salary">{{ job.salary }}</span>
@@ -73,9 +71,7 @@
                   <div class="job-item-title-container">
                     <h4 class="job-item-title">{{ job.title }}</h4>
                     <a href="#" class="talk-link">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                      </svg>
+                      <img src="../assets/icons/talk.png" alt="talk" class="talk-icon">
                     </a>
                   </div>
                   <span class="job-item-salary">{{ job.salary }}</span>
@@ -370,6 +366,18 @@ h2::after {
 
 .talk-link:hover + .job-title {
   color: var(--light-bronze);
+}
+
+.talk-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(1) sepia(0);
+  transition: all 0.3s;
+}
+
+.talk-link:hover .talk-icon {
+  filter: sepia(1);
+  transform: scale(1.1);
 }
 
 .job-salary {

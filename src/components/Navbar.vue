@@ -175,7 +175,13 @@ export default {
 .location-icon {
   width: 16px;
   height: 16px;
-  transition: color 0.3s;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.location:hover .location-icon {
+  color: var(--light-bronze);
+  transform: scale(1.1);
 }
 
 .location:hover {

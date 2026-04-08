@@ -6,16 +6,13 @@
         <!-- 期望选择区 -->
         <div class="expectation-section">
           <div class="expectation-tabs">
-            <div class="expectation-tab active">推荐</div>
+            <div class="expectation-tab" :class="{ active: selectedExpectation === '推荐' }" @click="selectExpectation('推荐')">推荐</div>
             <div class="divider">|</div>
-            <div class="expectation-tab">前端开发</div>
-            <div class="expectation-tab">后端开发</div>
-            <div class="expectation-tab">产品经理</div>
+            <div class="expectation-tab" :class="{ active: selectedExpectation === '前端开发' }" @click="selectExpectation('前端开发')">前端开发</div>
+            <div class="expectation-tab" :class="{ active: selectedExpectation === '后端开发' }" @click="selectExpectation('后端开发')">后端开发</div>
+            <div class="expectation-tab" :class="{ active: selectedExpectation === '产品经理' }" @click="selectExpectation('产品经理')">产品经理</div>
             <button class="add-expectation-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="plus-icon">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <img src="../assets/icons/plus2.png" alt="plus" class="plus-icon">
               添加期望
             </button>
           </div>
@@ -32,41 +29,92 @@
     <div class="filter-bar">
       <div class="container">
         <div class="filter-tabs">
-          <div class="filter-tab">
-            <span>求职类型</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          <!-- 求职类型 -->
+          <div class="filter-tab" @click="toggleFilter('jobType')" ref="jobTypeTab">
+            <span :class="{ 'highlighted': filters.jobType.value !== '任意' }">
+              {{ filters.jobType.title }}
+              <span v-if="filters.jobType.value !== '任意'">: {{ filters.jobType.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.jobType.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.jobType.isOpen">
+              <div class="filter-option" v-for="option in filters.jobType.options" :key="option" @click="selectFilterOption('jobType', option)">
+                {{ option }}
+              </div>
+            </div>
           </div>
-          <div class="filter-tab">
-            <span>薪资待遇</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          
+          <!-- 薪资待遇 -->
+          <div class="filter-tab" @click="toggleFilter('salary')">
+            <span :class="{ 'highlighted': filters.salary.value !== '任意' }">
+              {{ filters.salary.title }}
+              <span v-if="filters.salary.value !== '任意'">: {{ filters.salary.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.salary.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.salary.isOpen">
+              <div class="filter-option" v-for="option in filters.salary.options" :key="option" @click="selectFilterOption('salary', option)">
+                {{ option }}
+              </div>
+            </div>
           </div>
-          <div class="filter-tab">
-            <span>工作经验</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          
+          <!-- 工作经验 -->
+          <div class="filter-tab" @click="toggleFilter('experience')">
+            <span :class="{ 'highlighted': filters.experience.value !== '任意' }">
+              {{ filters.experience.title }}
+              <span v-if="filters.experience.value !== '任意'">: {{ filters.experience.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.experience.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.experience.isOpen">
+              <div class="filter-option" v-for="option in filters.experience.options" :key="option" @click="selectFilterOption('experience', option)">
+                {{ option }}
+              </div>
+            </div>
           </div>
-          <div class="filter-tab">
-            <span>学历要求</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          
+          <!-- 学历要求 -->
+          <div class="filter-tab" @click="toggleFilter('education')">
+            <span :class="{ 'highlighted': filters.education.value !== '任意' }">
+              {{ filters.education.title }}
+              <span v-if="filters.education.value !== '任意'">: {{ filters.education.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.education.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.education.isOpen">
+              <div class="filter-option" v-for="option in filters.education.options" :key="option" @click="selectFilterOption('education', option)">
+                {{ option }}
+              </div>
+            </div>
           </div>
-          <div class="filter-tab">
-            <span>公司行业</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          
+          <!-- 公司行业 -->
+          <div class="filter-tab" @click="toggleFilter('industry')">
+            <span :class="{ 'highlighted': filters.industry.value !== '任意' }">
+              {{ filters.industry.title }}
+              <span v-if="filters.industry.value !== '任意'">: {{ filters.industry.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.industry.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.industry.isOpen">
+              <div class="filter-option">暂不实现</div>
+            </div>
           </div>
-          <div class="filter-tab">
-            <span>公司规模</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-icon">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+          
+          <!-- 公司规模 -->
+          <div class="filter-tab" @click="toggleFilter('companySize')">
+            <span :class="{ 'highlighted': filters.companySize.value !== '任意' }">
+              {{ filters.companySize.title }}
+              <span v-if="filters.companySize.value !== '任意'">: {{ filters.companySize.value }}</span>
+            </span>
+            <img src="../assets/icons/arrow_down.png" alt="arrow" class="arrow-icon" :class="{ 'rotated': filters.companySize.isOpen }">
+            <!-- 下拉列表 -->
+            <div class="filter-dropdown" v-if="filters.companySize.isOpen">
+              <div class="filter-option" v-for="option in filters.companySize.options" :key="option" @click="selectFilterOption('companySize', option)">
+                {{ option }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -171,12 +219,77 @@ export default {
           tags: ['1-3年', '大专', '全职']
         }
       ],
-      selectedJob: null
+      selectedJob: null,
+      selectedExpectation: '推荐',
+      // 筛选器状态
+      filters: {
+        jobType: {
+          title: '求职类型',
+          value: '任意',
+          options: ['任意', '全职', '兼职', '实习'],
+          isOpen: false
+        },
+        salary: {
+          title: '薪资待遇',
+          value: '任意',
+          options: ['任意', '5K以下', '5K-10K', '10K-15K', '15K-20K', '20K-30K', '30K以上'],
+          isOpen: false
+        },
+        experience: {
+          title: '工作经验',
+          value: '任意',
+          options: ['任意', '在校', '应届生', '1年内', '1~3年', '3~5年', '5年+'],
+          isOpen: false
+        },
+        education: {
+          title: '学历要求',
+          value: '任意',
+          options: ['任意', '高中', '大专', '本科', '硕士', '博士'],
+          isOpen: false
+        },
+        industry: {
+          title: '公司行业',
+          value: '任意',
+          options: [],
+          isOpen: false
+        },
+        companySize: {
+          title: '公司规模',
+          value: '任意',
+          options: ['任意', '少于50人', '50-100人', '100-500人', '500-1000人', '1000人以上'],
+          isOpen: false
+        }
+      }
     }
   },
   methods: {
     selectJob(job) {
       this.selectedJob = job
+    },
+    selectExpectation(expectation) {
+      this.selectedExpectation = expectation
+    },
+    // 切换筛选器状态
+    toggleFilter(filterKey) {
+      // 关闭所有其他筛选器
+      Object.keys(this.filters).forEach(key => {
+        if (key !== filterKey) {
+          this.filters[key].isOpen = false
+        }
+      })
+      // 切换当前筛选器
+      this.filters[filterKey].isOpen = !this.filters[filterKey].isOpen
+    },
+    // 选择筛选器选项
+    selectFilterOption(filterKey, option) {
+      this.filters[filterKey].value = option
+      this.filters[filterKey].isOpen = false
+    },
+    // 关闭所有筛选器
+    closeAllFilters() {
+      Object.keys(this.filters).forEach(key => {
+        this.filters[key].isOpen = false
+      })
     }
   }
 }
@@ -206,11 +319,25 @@ export default {
 
 /* 容器 */
 .container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
   z-index: 1;
+}
+
+/* 页面主体 */
+.main-content {
+  padding-bottom: 60px;
+  max-width: 80%;
+}
+
+/* 内容包装器 */
+.content-wrapper {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  width: 100%;
 }
 
 /* 顶部拓展栏（一层） */
@@ -222,18 +349,30 @@ export default {
   z-index: 10;
 }
 
+.top-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
 .expectation-section {
-  margin-bottom: 16px;
+  flex: 1;
+}
+
+.search-section {
+  flex: 1;
+  margin: 0;
 }
 
 .expectation-tabs {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
 }
 
 .expectation-tab {
-  padding: 8px 16px;
+  padding: 5px 5px;
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
@@ -254,28 +393,29 @@ export default {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 16px;
-  right: 16px;
+  left: 5px;
+  right: 5px;
   height: 2px;
   background-color: var(--light-bronze);
 }
 
 .divider {
-  color: #ddd;
+  color: #666;
 }
 
 .add-expectation-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 3px 5px;
   background-color: transparent;
   border: 1px solid var(--light-bronze);
-  border-radius: 20px;
-  color: var(--light-bronze);
+  border-radius: 10px;
+  color: #666;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 14px;
+  margin-left: 10px;
 }
 
 .add-expectation-btn:hover {
@@ -286,11 +426,14 @@ export default {
 .plus-icon {
   width: 14px;
   height: 14px;
+  filter: brightness(0.7);
+  transition: all 0.3s;
+  margin-top: 1px;
 }
 
-/* 搜索框 */
-.search-section {
-  margin-top: 16px;
+.add-expectation-btn:hover .plus-icon {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
 }
 
 /* 顶部拓展栏（二层） */
@@ -306,7 +449,7 @@ export default {
 .filter-tabs {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 6px;
 }
 
 .filter-tab {
@@ -318,22 +461,73 @@ export default {
   transition: all 0.3s;
   border-radius: 4px;
   font-size: 14px;
+  position: relative;
+}
+
+/* 当值为任意时，标题颜色稍暗 */
+.filter-tab span {
   color: #666;
 }
 
-.filter-tab:hover {
+/* 当值不为任意时，标题高亮 */
+.filter-tab span.highlighted {
   color: var(--light-bronze);
+}
+
+/* 当值不为任意时，值也高亮 */
+.filter-tab span.highlighted span {
+  color: var(--light-bronze);
+}
+
+.filter-tab:hover {
   background-color: rgba(233, 237, 201, 0.5);
 }
 
 .filter-tab:hover .arrow-icon {
-  transform: rotate(180deg);
+  filter: brightness(1);
 }
 
 .arrow-icon {
   width: 14px;
   height: 14px;
+  filter: brightness(0.6);
   transition: all 0.3s;
+}
+
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* 筛选器下拉列表 */
+.filter-tab {
+  position: relative;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 120px;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.filter-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.filter-option:hover {
+  background-color: var(--beige);
+  color: var(--light-bronze);
 }
 
 /* 页面主体 */
@@ -349,10 +543,10 @@ export default {
 
 /* 职位卡片区 */
 .job-list {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 300px;
 }
 
 .job-card {
@@ -489,7 +683,7 @@ export default {
 
 /* 职位详情区 */
 .job-detail-section {
-  width: 380px;
+  flex: 1;
   position: sticky;
   top: 84px;
   height: calc(100vh - 120px);
