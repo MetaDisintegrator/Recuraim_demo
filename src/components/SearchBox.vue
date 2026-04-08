@@ -17,6 +17,7 @@ export default {
 .search-box {
   display: flex;
   max-width: 600px;
+  margin: 0 auto;
   border: 2px solid var(--light-bronze);
   border-radius: 12px;
   overflow: hidden;
