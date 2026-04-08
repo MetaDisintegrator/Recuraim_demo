@@ -211,6 +211,7 @@ export default {
   background: linear-gradient(135deg, var(--tea-green) 0%, var(--cornsilk) 100%);
   background-attachment: fixed;
   position: relative;
+  padding-top: 60px;
 }
 
 /* 背景装饰 */
@@ -266,7 +267,7 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   border: 2px solid var(--light-bronze);
-  border-radius: 30px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;

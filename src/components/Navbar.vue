@@ -1,10 +1,15 @@
 <template>
-  <nav class="navbar">
+  <!-- 固定导航栏 -->
+  <nav class="navbar fixed-navbar">
     <!-- 标题区 -->
     <div class="navbar-header">
       <div class="logo" @click="$router.push('/')">Recuraim</div>
-      <div class="location" @click="showLocationModal = true">
-        <span>{{ currentLocation }}</span>
+      <div class="location" @click="showLocationModal = true" @mouseenter="onLocationHover" @mouseleave="onLocationLeave">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="location-icon">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span>{{ displayLocation }}</span>
         <span class="dropdown-icon">▼</span>
       </div>
     </div>
@@ -22,11 +27,11 @@
     </div>
 
     <!-- 个人信息 -->
-    <div class="user-info" @mouseenter="showUserMenu = true" @mouseleave="showUserMenu = false">
+    <div class="user-info" @mouseenter="onUserInfoHover" @mouseleave="hideUserMenu">
       <span class="user-name">用户</span>
       <div class="user-avatar"></div>
       <!-- 个人菜单 -->
-      <div class="user-menu" v-if="showUserMenu">
+      <div class="user-menu" v-if="showUserMenu" @mouseenter="onUserMenuHover" @mouseleave="hideUserMenu">
         <a href="#" class="menu-item">完善信息</a>
         <a href="#" class="menu-item">切换为招聘者</a>
         <a href="/login" class="menu-item">退出登录</a>
@@ -60,13 +65,51 @@ export default {
       showLocationModal: false,
       showUserMenu: false,
       locationSearch: '',
-      locations: ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '天津']
+      locations: ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '天津'],
+      isLocationHovered: false,
+      userMenuCloseTimer: null
+    }
+  },
+  computed: {
+    displayLocation() {
+      return this.isLocationHovered ? '选择' : this.currentLocation;
     }
   },
   methods: {
     selectLocation(location) {
       this.currentLocation = location;
       this.showLocationModal = false;
+    },
+    onLocationHover() {
+      this.isLocationHovered = true;
+    },
+    onLocationLeave() {
+      this.isLocationHovered = false;
+    },
+    hideUserMenu() {
+      // 清除之前的定时器
+      if (this.userMenuCloseTimer) {
+        clearTimeout(this.userMenuCloseTimer);
+      }
+      // 添加延迟，让用户有时间移动鼠标到菜单
+      this.userMenuCloseTimer = setTimeout(() => {
+        this.showUserMenu = false;
+      }, 200);
+    },
+    clearUserMenuCloseTimer() {
+      // 清除关闭定时器
+      if (this.userMenuCloseTimer) {
+        clearTimeout(this.userMenuCloseTimer);
+        this.userMenuCloseTimer = null;
+      }
+    },
+    onUserInfoHover() {
+      this.showUserMenu = true;
+      this.clearUserMenuCloseTimer();
+    },
+    onUserMenuHover() {
+      this.showUserMenu = true;
+      this.clearUserMenuCloseTimer();
     }
   }
 }
@@ -81,6 +124,28 @@ export default {
   height: 60px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .navbar-header {
@@ -99,15 +164,24 @@ export default {
 .location {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 4px;
   transition: all 0.3s;
+  margin-right: 20px;
+}
+
+.location-icon {
+  width: 16px;
+  height: 16px;
+  transition: color 0.3s;
 }
 
 .location:hover {
-  background-color: var(--beige);
+  color: var(--light-bronze);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-icon {
@@ -119,13 +193,14 @@ export default {
   align-items: center;
   flex: 1;
   justify-content: center;
-  gap: 40px;
+  gap: 20px;
 }
 
 .nav-right {
   display: flex;
-  gap: 40px;
+  gap: 20px;
   margin-left: auto;
+  margin-right: 20px;
 }
 
 .nav-item {
@@ -177,7 +252,7 @@ export default {
 }
 
 .user-name {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .user-avatar {
@@ -197,6 +272,8 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   z-index: 100;
+  min-width: 180px;
+  transition: all 0.3s;
 }
 
 .menu-item {
@@ -205,6 +282,7 @@ export default {
   text-decoration: none;
   color: #333;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .menu-item:hover {
