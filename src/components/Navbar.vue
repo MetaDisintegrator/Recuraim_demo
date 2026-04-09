@@ -19,8 +19,7 @@
       <template v-if="!isRecruiter">
         <router-link to="/" class="nav-item" active-class="active">首页</router-link>
         <router-link to="/jobs" class="nav-item" active-class="active">职位</router-link>
-        <router-link to="/companies" class="nav-item" active-class="active">公司</router-link>
-        <router-link to="/discussions" class="nav-item" active-class="active">讨论</router-link>
+        <router-link to="/discussions" class="nav-item" active-class="active">问答</router-link>
         <div class="nav-right">
           <router-link to="/messages" class="nav-item" active-class="active">消息</router-link>
           <router-link to="/resume" class="nav-item" active-class="active">简历</router-link>

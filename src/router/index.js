@@ -18,8 +18,8 @@ const routes = [
   },
   {
     path: '/discussions',
-    name: 'Discussions',
-    component: () => import('../views/Discussions.vue')
+    name: 'Questions',
+    component: () => import('../views/Questions.vue')
   },
   {
     path: '/messages',

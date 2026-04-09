@@ -1,17 +1,17 @@
 <template>
-  <div class="discussions">
-    <h1>讨论区</h1>
+  <div class="questions">
+    <h1>问答区</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Discussions'
+  name: 'Questions'
 }
 </script>
 
 <style scoped>
-.discussions {
+.questions {
   padding: 20px;
 }
 
