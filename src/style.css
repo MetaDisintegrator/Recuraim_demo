@@ -10,6 +10,13 @@
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  
+  /* 求职问答页面配色 - 以用途命名 */
+  --qna-bg-primary: #ccd5aeff; /* 主背景色 */
+  --qna-bg-secondary: #e9edc9ff; /* 次要背景色 */
+  --qna-bg-tertiary: #fefae0ff; /* 三级背景色 */
+  --qna-bg-hover: #faedcdff; /* 悬停背景色 */
+  --qna-accent: #d4a373ff; /* 强调色 */
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;

@@ -46,6 +46,10 @@
               <img v-else src="../assets/icons/favourited.png" alt="favourite" class="favourite-icon">
               <span>{{ isFavourited ? '已收藏' : '收藏' }}</span>
             </button>
+            <button class="ask-ai-btn" @click="askAI">
+              <img src="../assets/icons/attachment.png" alt="ask-ai" class="ask-ai-icon">
+              <span>问AI</span>
+            </button>
             <button class="contact-btn">立刻沟通</button>
           </div>
         </div>
@@ -126,6 +130,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   job: {
@@ -135,8 +140,19 @@ const props = defineProps({
   }
 });
 
+const router = useRouter();
 const isFavourited = ref(false);
 const toggleFavourite = () => isFavourited.value = !isFavourited.value;
+
+// 跳转到问答页面并传输job数据
+const askAI = () => {
+  if (props.job) {
+    // 将job数据存储到sessionStorage，以便在问答页面获取
+    sessionStorage.setItem('questionJobData', JSON.stringify(props.job));
+    // 跳转到问答页面
+    router.push('/questions');
+  }
+};
 
 // AI匹配状态控制
 const matchStatus = ref('idle'); // idle | analyzing | finished
@@ -359,6 +375,40 @@ const startAnalysis = () => {
   background-color: #c09263;
   transform: scale(1.08);
   box-shadow: 0 6px 20px rgba(192, 146, 99, 0.4);
+}
+
+.ask-ai-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  margin: 6px 0;
+  background-color: transparent;
+  border: 2px solid var(--light-bronze);
+  border-radius: 10px;
+  color: var(--light-bronze);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ask-ai-btn:hover {
+  background-color: var(--light-bronze);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(192, 146, 99, 0.3);
+}
+
+.ask-ai-icon {
+  width: 16px;
+  height: 16px;
+  transition: all 0.3s;
+}
+
+.ask-ai-btn:hover .ask-ai-icon {
+  transform: scale(1.1);
+  filter: brightness(0) invert(1);
 }
 
 .job-detail-content {
