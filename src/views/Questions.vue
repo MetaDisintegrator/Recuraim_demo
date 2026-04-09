@@ -34,32 +34,36 @@
     <div class="chat-panel">
       <!-- 对话标题 -->
       <div class="chat-header">
-        <h2>{{ currentConversation?.title || '新对话' }}</h2>
+        <h2>{{ currentConversation?.title || '新对话' }} <span v-if="jobData" class="job-associated">（当前关联{{ jobData.title }}）</span></h2>
         <!-- 职位信息区域 -->
-        <div class="job-info-section" v-if="jobData">
+        <div class="job-info-section" v-if="currentJobData">
           <div class="job-info-header" @click="jobInfoExpanded = !jobInfoExpanded">
             <div class="job-info-header-content">
               <h3>关联职位</h3>
-              <span class="job-title-collapsed" v-if="!jobInfoExpanded">{{ jobData.title }}</span>
+              <span class="job-title-collapsed" v-if="!jobInfoExpanded">{{ currentJobData.title }}</span>
             </div>
-            <span class="expand-icon" :class="{ 'expanded': jobInfoExpanded }">▼</span>
+            <div class="job-info-actions">
+              <button v-if="globalJobData" class="cancel-btn" @click.stop="cancelGlobalJob">取消选择</button>
+              <button v-else-if="jobData" class="cancel-btn" @click.stop="cancelJobAssociation">取消关联</button>
+              <span class="expand-icon" :class="{ 'expanded': jobInfoExpanded }">▼</span>
+            </div>
           </div>
           <div class="job-info-content" v-if="jobInfoExpanded">
             <div class="job-info-item">
               <span class="job-info-label">职位名称：</span>
-              <span class="job-info-value">{{ jobData.title }}</span>
+              <span class="job-info-value">{{ currentJobData.title }}</span>
             </div>
             <div class="job-info-item">
               <span class="job-info-label">公司：</span>
-              <span class="job-info-value">{{ jobData.company }}</span>
+              <span class="job-info-value">{{ currentJobData.company }}</span>
             </div>
             <div class="job-info-item">
               <span class="job-info-label">薪资：</span>
-              <span class="job-info-value">{{ jobData.salary }}</span>
+              <span class="job-info-value">{{ currentJobData.salary }}</span>
             </div>
             <div class="job-info-item">
               <span class="job-info-label">地点：</span>
-              <span class="job-info-value">{{ jobData.location }}</span>
+              <span class="job-info-value">{{ currentJobData.location }}</span>
             </div>
           </div>
         </div>
@@ -114,7 +118,6 @@
           <button class="action-btn send-btn" @click="sendMessage" :disabled="!inputMessage.trim() || isThinking">
             <img v-if="!inputMessage.trim() || isThinking" src="../assets/icons/send.png" alt="send" class="icon">
             <img v-else src="../assets/icons/send_white.png" alt="send" class="icon">
-            <span>发送</span>
           </button>
         </div>
       </div>
@@ -133,6 +136,7 @@ export default {
       showLinkJob: false,
       isThinking: false,
       jobData: null,
+      globalJobData: null, // 全局临时性job数据
       jobInfoExpanded: false
     }
   },
@@ -154,12 +158,17 @@ export default {
     const savedSelectedId = sessionStorage.getItem('questionsSelectedConversationId')
     if (savedSelectedId) {
       this.selectedConversationId = parseInt(savedSelectedId)
+      // 加载选中对话的jobData
+      const selectedConversation = this.conversations.find(c => c.id === this.selectedConversationId)
+      if (selectedConversation) {
+        this.jobData = selectedConversation.jobData
+      }
     }
     
     // 加载从Job页面传输过来的job数据
     const savedJobData = sessionStorage.getItem('questionJobData')
     if (savedJobData) {
-      this.jobData = JSON.parse(savedJobData)
+      this.globalJobData = JSON.parse(savedJobData)
       // 清除sessionStorage中的job数据，避免下次加载时重复显示
       sessionStorage.removeItem('questionJobData')
     }
@@ -170,6 +179,10 @@ export default {
     },
     currentMessages() {
       return this.currentConversation?.messages || []
+    },
+    currentJobData() {
+      // 优先使用全局job数据，如果没有则使用当前对话的job数据
+      return this.globalJobData || this.jobData
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -197,7 +210,8 @@ export default {
           messages: [
             { type: 'user', content: '前端开发需要掌握哪些技能？' },
             { type: 'bot', content: '测试回答' }
-          ]
+          ],
+          jobData: null
         },
         {
           id: 2,
@@ -205,7 +219,8 @@ export default {
           messages: [
             { type: 'user', content: '如何撰写一份优秀的简历？' },
             { type: 'bot', content: '测试回答' }
-          ]
+          ],
+          jobData: null
         }
       ]
     },
@@ -213,17 +228,19 @@ export default {
       // 检查是否已经处于新对话中（标题为'新对话'且无消息）
       const currentConversation = this.conversations.find(c => c.id === this.selectedConversationId)
       if (currentConversation && currentConversation.title === '新对话' && currentConversation.messages.length === 0) {
-        return // 已经处于新对话中，不创建新对话
+        return currentConversation // 已经处于新对话中，返回当前对话
       }
       
       const newId = Date.now()
       const newConversation = {
         id: newId,
         title: '新对话',
-        messages: []
+        messages: [],
       }
       this.conversations.unshift(newConversation)
       this.selectedConversationId = newId
+      this.jobData = null
+      return newConversation
     },
     selectConversation(id) {
       // 切换对话前，检查当前对话是否为空的新对话，如果是则删除
@@ -234,12 +251,20 @@ export default {
         }
       }
       this.selectedConversationId = id
+      // 切换对话时，更新jobData为当前对话的jobData
+      const selectedConversation = this.conversations.find(c => c.id === id)
+      this.jobData = selectedConversation?.jobData || null
     },
     confirmDelete(conversationId) {
       if (confirm('确定要删除这条对话吗？')) {
+        const deletedConversation = this.conversations.find(c => c.id === conversationId)
         this.conversations = this.conversations.filter(c => c.id !== conversationId)
         if (this.selectedConversationId === conversationId) {
           this.selectedConversationId = null
+          // 如果删除的是当前选中的对话，并且该对话有关联的job，清空jobData
+          if (deletedConversation && deletedConversation.jobData) {
+            this.jobData = null
+          }
         }
       }
     },
@@ -247,8 +272,22 @@ export default {
       if (!this.inputMessage.trim() || this.isThinking) return
       
       // 如果当前没有选中对话，创建新对话
-      if (!this.selectedConversationId) {
-        this.createNewConversation()
+      let conversation = this.currentConversation
+      if (!conversation) {
+        conversation = this.createNewConversation()
+      }
+      
+      // 确保conversation存在
+      if (!conversation) {
+        console.error('Current conversation not found')
+        return
+      }
+      
+      // 如果存在全局job数据，将其与当前对话绑定
+      if (this.globalJobData) {
+        conversation.jobData = this.globalJobData
+        this.jobData = this.globalJobData
+        this.globalJobData = null // 清空全局job数据
       }
       
       // 添加用户消息
@@ -256,13 +295,13 @@ export default {
         type: 'user',
         content: this.inputMessage.trim()
       }
-      this.currentConversation.messages.push(userMessage)
+      conversation.messages.push(userMessage)
       
       // 如果是新对话的第一条消息，以此命名对话
-      if (this.currentConversation.title === '新对话' && this.currentConversation.messages.length === 1) {
+      if (conversation.title === '新对话' && conversation.messages.length === 1) {
         // 取消息的前20个字符作为对话标题
         const title = this.inputMessage.trim().substring(0, 20) + (this.inputMessage.trim().length > 20 ? '...' : '')
-        this.currentConversation.title = title
+        conversation.title = title
       }
       
       // 清空输入框
@@ -280,7 +319,7 @@ export default {
           type: 'bot',
           content: '测试回答'
         }
-        this.currentConversation.messages.push(botMessage)
+        conversation.messages.push(botMessage)
         this.isThinking = false
         this.scrollToBottom()
       }, 1000 + Math.random() * 2000)
@@ -296,6 +335,17 @@ export default {
           chatMessages.scrollTop = chatMessages.scrollHeight
         }
       }, 100)
+    },
+    // 取消全局job选择
+    cancelGlobalJob() {
+      this.globalJobData = null
+    },
+    // 取消job关联
+    cancelJobAssociation() {
+      if (this.currentConversation) {
+        this.currentConversation.jobData = null
+        this.jobData = null
+      }
     }
   },
   beforeUnmount() {
@@ -502,6 +552,13 @@ export default {
   margin-bottom: 12px;
 }
 
+.job-associated {
+  font-size: 14px;
+  font-weight: normal;
+  color: #666;
+  margin-left: 8px;
+}
+
 .chat-header h2::after {
   display: none;
 }
@@ -511,13 +568,12 @@ export default {
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 12px;
+  padding: 4px 8px;
   margin-top: 12px;
   transition: all 0.3s;
 }
 
 .job-info-header {
-  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -526,15 +582,34 @@ export default {
   padding: 4px 0;
 }
 
-.job-info-header:hover {
-  color: var(--qna-accent);
-}
-
 .job-info-header-content {
   display: flex;
   align-items: center;
   gap: 12px;
   flex: 1;
+}
+
+.job-info-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cancel-btn {
+  padding: 4px 8px;
+  background-color: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #666;
+}
+
+.cancel-btn:hover {
+  background-color: #f1f1f1;
+  border-color: #007bff;
+  color: #007bff;
 }
 
 .job-info-header h3 {
@@ -571,6 +646,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-bottom: 8px;
 }
 
 .job-info-item {
@@ -782,11 +858,11 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 8px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
