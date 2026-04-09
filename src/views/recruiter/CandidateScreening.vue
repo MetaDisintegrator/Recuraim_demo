@@ -75,8 +75,7 @@ const candidates = ref([
     expectedSalary: '18K-25K',
     location: '上海',
     experience: '3年经验',
-    education: '本科',
-    advantage: '熟练掌握 Vue3、React 及其生态，主导过多个大型中后台管理系统的开发重构。对前端性能优化、工程化有深入理解，具有良好的沟通能力和团队协作精神。',
+    education: '本科',    techTags: ['Vue3', 'React', 'Vite', 'Webpack', '前端工程化'],    advantage: '熟练掌握 Vue3、React 及其生态，主导过多个大型中后台管理系统的开发重构。对前端性能优化、工程化有深入理解，具有良好的沟通能力和团队协作精神。',
     workExps: [
       { id: 1, company: '某互联网大厂', time: '2023.06 - 至今', role: '高级前端工程师', desc: '负责核心业务前端架构设计与开发，推动 Vite 接入，提升构建速度40%。' },
       { id: 2, company: '某创业公司', time: '2021.07 - 2023.05', role: '前端开发工程师', desc: '参与从0到1搭建招聘平台，实现并优化各类复杂交互动效。' }
@@ -91,6 +90,7 @@ const candidates = ref([
     location: '北京',
     experience: '5年经验',
     education: '硕士',
+    techTags: ['JavaScript', 'Node.js', '微服务', 'NestJS', '全栈开发'],
     advantage: '精通 JavaScript 与 Node.js，具有全栈开发经验。熟悉基于微服务架构的分布式系统，善于排查线上疑难杂症。',
     workExps: [
       { id: 1, company: '某科技公司', time: '2020.08 - 至今', role: '全栈工程师', desc: '负责用户端和管理端的前后端开发，独立承担了求职问答模块的搭建。' }
@@ -105,6 +105,7 @@ const candidates = ref([
     location: '深圳',
     experience: '2年经验',
     education: '本科',
+    techTags: ['Vue2', 'Vue3', 'HTML/CSS', 'ECharts', '响应式布局'],
     advantage: '扎实的 HTML/CSS/JS 基础，熟悉 Vue 体系，对响应式原理有深入研究。能熟练使用各种前端常用工具链。',
     workExps: [
       { id: 1, company: '某设计公司', time: '2024.01 - 至今', role: '前端工程师', desc: '负责各类互动H5和大屏活动页面的开发工作。' }

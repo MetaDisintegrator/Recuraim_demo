@@ -39,6 +39,16 @@
 
     <!-- 内容滚动区 -->
     <div class="detail-content">
+      <div class="section" v-if="candidate.techTags && candidate.techTags.length > 0">
+        <h3 class="section-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          核心技能 (AI 智能提取)
+        </h3>
+        <div class="tech-tags">
+          <span class="tech-tag" v-for="tag in candidate.techTags" :key="tag">{{ tag }}</span>
+        </div>
+      </div>
+
       <div class="section">
         <h3 class="section-title">个人优势</h3>
         <p class="section-text">{{ candidate.advantage }}</p>
@@ -199,6 +209,28 @@ const toggleFav = () => {
   margin-bottom: 16px;
   border-left: 4px solid var(--tea-green, #ccd5ae);
   padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tech-tag {
+  background: var(--cornsilk, #fefae0);
+  border: 1px solid var(--beige, #e9edc9);
+  color: var(--light-bronze, #d4a373);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+.tech-tag:hover {
+  background: var(--beige, #e9edc9);
+  color: #333;
 }
 .section-text {
   font-size: 15px;
