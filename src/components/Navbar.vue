@@ -31,6 +31,7 @@
         <router-link to="/recruiter/jobs" class="nav-item" active-class="active">职位管理</router-link>
         <router-link to="/recruiter/candidates" class="nav-item" active-class="active">候选人</router-link>
         <div class="nav-right">
+          <router-link to="/recruiter/post-job" class="nav-item post-job-btn" active-class="active">发布职位</router-link>
           <router-link to="/messages" class="nav-item" active-class="active">消息</router-link>
         </div>
       </template>
@@ -242,6 +243,24 @@ export default {
 
 .nav-item.active {
   color: var(--light-bronze);
+}
+
+.post-job-btn {
+  background-color: var(--tea-green, #ccd5ae);
+  color: #333 !important;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-top: 4px;
+}
+
+.post-job-btn:hover {
+  background-color: var(--beige, #e9edc9);
+  color: var(--light-bronze) !important;
 }
 
 .nav-item::after {

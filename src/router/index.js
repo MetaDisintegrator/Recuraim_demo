@@ -45,6 +45,11 @@ const routes = [
     path: '/recruiter/candidates',
     name: 'CandidateScreening',
     component: () => import('../views/recruiter/CandidateScreening.vue')
+  },
+  {
+    path: '/recruiter/post-job',
+    name: 'PostJob',
+    component: () => import('../views/recruiter/PostJob.vue')
   }
 ]
 
