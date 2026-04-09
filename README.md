@@ -1,5 +1,39 @@
-# Vue 3 + Vite
+# Recuraim Demo - 智能招聘与求职系统（纯前端演示版）
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+本项目是一个基于 Vue 3 + Vite 构建的招聘/求职双端管理系统前端原型，重点展示了职位匹配、简历分析、招聘发布及投递跟踪等功能。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 运行环境与依赖
+- **Node.js**: 建议 v16.0 或以上版本
+- **包管理器**: 推荐使用自带的 `npm` （项目中已有 package.json 解析相关前端依赖，如 Vue 3, Vue Router, Vite 等）
+
+## 运行步骤
+
+1. 在终端中，进入到本项目的根目录 `Recuraim_demo`。
+2. **安装项目依赖**：
+   ```bash
+   npm install
+   ```
+3. **启动本地开发服务器**：
+   ```bash
+   npm run dev
+   ```
+4. **访问系统**：
+   启动成功后，终端会打印出本地访问链接（通常为 `http://localhost:5173/`）。在浏览器中打开此链接即可进入系统体验。
+
+## 核心功能与体验指南
+
+系统内置了 **求职者 (Jobseeker)** 和 **招聘者 (Recruiter)** 双端独立的交互流程。
+**如何切换视角**：进入系统后，点击页面**右上角导航栏**的 `[当前身份：...]` 按钮，即可在求职者和招聘者身份间自由切换。
+
+### 体验路径 1：求职者视角
+- **职位浏览（模拟智能匹配）**：在首页查看职位，点击左下角的匹配气泡查看具体的岗位契合度分析。
+- **投递管理与跟踪 (`/applications`)**：点击顶部导航栏中的“投递”进入求职看板。
+  - 体验以时间轴和数据漏斗形式展示的求职状态。
+  - 点击列表卡片下方的“更新进度”按钮，可以模拟真实流程的变更（如变为“面试流程中”或“收到Offer”），并看到时间轴的动态可视化变化。
+
+### 体验路径 2：招聘者视角
+- **发布新职位 (`/recruiter/post-job`)**：点击导航栏的“发布职位”。
+  - 填写职位基本信息后，点击“AI 一键润色JD”，体验模拟的 AI 职位描述优化交互。
+- **候选人简历筛选 (`/recruiter/screening`)**：点击导航栏的“候选人筛选”。
+  - 体验查看求职者的**人岗匹配度**评分，以及基于求职者简历自动由 AI 提取生成的“技术标签 (Tech Tags)”。
+
