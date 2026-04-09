@@ -3,7 +3,9 @@
   <nav class="navbar fixed-navbar">
     <!-- 标题区 -->
     <div class="navbar-header">
-      <div class="logo" @click="$router.push('/')">Recuraim</div>
+      <div class="logo" @click="$router.push('/')">
+        <img src="../assets/Logo_Recuraim.png" alt="Recuraim" class="logo-image">
+      </div>
       <div class="location" @click="showLocationModal = true" @mouseenter="onLocationHover" @mouseleave="onLocationLeave">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="location-icon">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -167,10 +169,14 @@ export default {
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--light-bronze);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 36px;
+  width: auto;
 }
 
 .location {

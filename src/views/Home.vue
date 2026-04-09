@@ -223,7 +223,9 @@ export default {
 
 /* 英雄区域 */
 .hero {
-  background: linear-gradient(135deg, var(--tea-green) 0%, rgba(233, 237, 201, 0.8) 100%);
+  background-image: url('../assets/Hero_BG.png');
+  background-size: cover;
+  background-position: center;
   padding: 80px 20px;
   text-align: center;
   position: relative;
